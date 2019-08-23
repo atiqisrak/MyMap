@@ -2,4 +2,9 @@
     <string name="app_name">My Map</string>
     <string name="title_activity_maps">Map</string>
     <string name="google_map_key" translatable="false">AIzaSyCmV0QFTI_2NlAFDqNQ5Io1dnZRbgGRn4Q</string>
+    <string name="proceed">Proceed</string>
+    <string name="save">Save</string>
+    <string name="location_name">Location Name</string>
+    <string name="location_latitude">Location Latitude</string>
+    <string name="location_longitude">Location Longitude</string>
 </resources>

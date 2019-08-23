@@ -52,6 +52,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "218968631099-c97d3g6o9lkm8v4cc9ovg3vj2c2pos2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.johnwick.mymap",
+            "certificate_hash": "304f036fa6bea134de4b53e745f537f4f8c0bdb9"
+          }
+        },
+        {
           "client_id": "218968631099-2t1v583ir35f16tfvgftd613ftedm5so.apps.googleusercontent.com",
           "client_type": 3
         }
