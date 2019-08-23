@@ -14,7 +14,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    private DatabaseReference mDatabase;
+
+    FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    DatabaseReference mRef = mDatabase.getReference();
     private Button btnSave;
     private Button btnProceed;
     private EditText editTextLocationName;
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mDatabase=FirebaseDatabase.getInstance().getReference().child("Users");
+        mRef=FirebaseDatabase.getInstance().getReference().child("Users");
         editTextLocationName=(EditText)findViewById(R.id.editTextLocationName);
         editTextLocationLat=(EditText)findViewById(R.id.editTextLocationLat);
         editTextLocationLong=(EditText)findViewById(R.id.editTextLocationLong);
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         double latitude= Double.parseDouble(editTextLocationLat.getText().toString().trim());
         double longitude= Double.parseDouble(editTextLocationLong.getText().toString().trim());
         UserInformation userInformation=new UserInformation(name,latitude,longitude);
-        mDatabase.child("Users").setValue(userInformation);
+        mRef.child("Users").setValue(userInformation);
         Toast.makeText(this,"Saved",Toast.LENGTH_LONG).show();
     }
 

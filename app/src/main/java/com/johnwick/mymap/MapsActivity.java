@@ -171,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap){
     mMap=googleMap;
     googleMap.setOnMarkerClickListener(this);
-    googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -179,6 +179,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 UserInformation user = s.getValue(UserInformation.class);
                 LatLng location=new LatLng(user.latitude,user.longitude);
                 mMap.addMarker(new MarkerOptions().position(location).title(user.name)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+                /*TODO: Previous Location gone*/
+
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(location));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,20));
+/*
+
+                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Searched Location");
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                mMap.addMarker(markerOptions);
+*/
+
             }
         }
 
