@@ -7,4 +7,5 @@
     <string name="location_name">Location Name</string>
     <string name="location_latitude">Location Latitude</string>
     <string name="location_longitude">Location Longitude</string>
+    <string name="inputActivity">Input</string>
 </resources>
