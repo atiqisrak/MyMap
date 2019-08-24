@@ -14,7 +14,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-
     FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     DatabaseReference mRef = mDatabase.getReference();
     private Button btnSave;
@@ -47,9 +46,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String name =editTextLocationName.getText().toString().trim();
         double latitude= Double.parseDouble(editTextLocationLat.getText().toString().trim());
         double longitude= Double.parseDouble(editTextLocationLong.getText().toString().trim());
+
+        String key = mRef.push().getKey();
+
+
         UserInformation userInformation=new UserInformation(name,latitude,longitude);
-        mRef.child("Users").setValue(userInformation);
-        Toast.makeText(this,"Saved",Toast.LENGTH_LONG).show();
+        mRef.child(key).setValue(userInformation);
+        Toast.makeText(this,"Successfully Saved",Toast.LENGTH_LONG).show();
     }
 
     @Override

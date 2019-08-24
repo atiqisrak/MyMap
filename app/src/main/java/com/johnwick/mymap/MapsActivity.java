@@ -6,9 +6,13 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -31,8 +35,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.util.List;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener,GoogleMap.OnMarkerClickListener {
     private GoogleMap mMap;
+    EditText et;
     private ChildEventListener mChildEventListener;
     private DatabaseReference mUsers;
     Marker marker;
@@ -44,19 +52,101 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        et = (EditText) findViewById(R.id.locationSearchBar);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        SupportMapFragment mapFragment=(SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        setContentView(R.layout.maplayout);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ChildEventListener mChildEventListener;
-        mUsers= FirebaseDatabase.getInstance().getReference("Users");
+        mUsers = FirebaseDatabase.getInstance().getReference("Users");
         mUsers.push().setValue(marker);
 
+        //deleted code
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        googleMap.setOnMarkerClickListener(this);
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    UserInformation user = s.getValue(UserInformation.class);
+                    LatLng location = new LatLng(user.latitude, user.longitude);
+                    mMap.addMarker(new MarkerOptions().position(location).title(user.name)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+                    /*TODO: Previous Location gone*/
+
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(location));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 20));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+//   }
+
+    public void goToLocation(double latitude, double longitude, int zoom) {
+        LatLng latLng = new LatLng(latitude, longitude);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
+        mMap.moveCamera(update);
+    }
+
+    public void findOnMap(View view) {
+        Geocoder geocoder = new Geocoder(this);
+        try {
+            List<Address> mylist = geocoder.getFromLocationName(et.getText().toString(), 1);
+            Address address = mylist.get(0);
+            String locality = address.getLocality();
+            double lat = address.getLatitude();
+            double lon = address.getLongitude();
+            goToLocation(lat,lon,20);
+            Toast.makeText(getApplicationContext(),locality,Toast.LENGTH_SHORT).show();
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+/*
 
 //        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 //        fetchLastLocation();
-    }
-/*
+
     private void fetchLastLocation() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -167,64 +257,3 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 }
 */
-    @Override
-    public void onMapReady(GoogleMap googleMap){
-    mMap=googleMap;
-    googleMap.setOnMarkerClickListener(this);
-    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-    mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            for(DataSnapshot s : dataSnapshot.getChildren()){
-                UserInformation user = s.getValue(UserInformation.class);
-                LatLng location=new LatLng(user.latitude,user.longitude);
-                mMap.addMarker(new MarkerOptions().position(location).title(user.name)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
-                /*TODO: Previous Location gone*/
-
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(location));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,20));
-/*
-
-                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Searched Location");
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                mMap.addMarker(markerOptions);
-*/
-
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-        }
-    });
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        return false;
-    }
-}
