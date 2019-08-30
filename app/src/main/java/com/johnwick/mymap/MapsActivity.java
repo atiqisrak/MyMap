@@ -101,7 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         close_menu = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.close_menu);
         rotate_clockwise = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         rotate_anticlockwise = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
-/*        open_menu.(new View.OnClickListener(){
+        button_menu.setOnClickListener(new View.OnClickListener(){
            @Override
            public void onClick(View v){
                 if (isOpen){
@@ -110,14 +110,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 else {
                     button_current_location.startAnimation(open_menu);
                     button_direction.startAnimation(open_menu);
-                    open_menu.(rotate_clockwise);
+                    button_menu.startAnimation(rotate_clockwise);
                     button_current_location.setClickable(true);
                     button_direction.setClickable(true);
                     isOpen = true;
 
                 }
            }
-        });*/
+        });
     }
 
     @Override
